@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Stocks 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #b8941f;
+    font-family: 'Roboto Condensed', sans-serif;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  .lang-bar {
+    max-width: 820px;
+    margin: 0 auto 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .lang-bar span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #1a0e00;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 4px;
+  }
+  .lang-btn {
+    background: rgba(26,14,0,0.2);
+    border: 1px solid rgba(26,14,0,0.4);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a0e00;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .lang-btn:hover { background: rgba(26,14,0,0.35); }
+  .lang-btn.active {
+    background: #1a0e00;
+    color: #f0c840;
+    border-color: #c8a84b;
+  }
+  .wrapper {
+    background: linear-gradient(145deg, #d4a832 0%, #c49820 50%, #b8880a 100%);
+    border: 3px solid #8a6a00;
+    border-radius: 4px;
+    padding: 28px 28px 20px;
+    max-width: 820px;
+    margin: 0 auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .header { margin-bottom: 22px; border-bottom: 2px solid #8a6a00; padding-bottom: 14px; }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 46px;
+    color: #1a0e00;
+    letter-spacing: 2px;
+    line-height: 0.95;
+  }
+  .header .sub1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #3a2400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+  .header .sub2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #3a2400;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .section { display: flex; gap: 10px; margin-bottom: 8px; align-items: stretch; }
+  .section-label {
+    width: 140px; min-width: 140px;
+    background: #1a0e00;
+    border-radius: 3px;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 10px 12px;
+  }
+  .section-label .num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: #c8a84b;
+    letter-spacing: 2px; line-height: 1; margin-bottom: 4px;
+  }
+  .section-label .title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px; font-weight: 700;
+    color: #f0d880; text-transform: uppercase;
+    letter-spacing: 0.8px; line-height: 1.35;
+  }
+  .companies {
+    flex: 1;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(138,106,0,0.4);
+    border-radius: 3px;
+    padding: 8px 10px;
+    display: flex; flex-wrap: wrap; gap: 6px; align-content: center;
+  }
+  .company {
+    background: rgba(26,14,0,0.12);
+    border: 1px solid rgba(26,14,0,0.25);
+    border-radius: 3px;
+    padding: 5px 10px; text-align: center; min-width: 72px;
+  }
+  .company .name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: #1a0e00; text-transform: uppercase;
+    letter-spacing: 0.5px; line-height: 1.2;
+  }
+  .company .ticker {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 9px; font-weight: 700;
+    color: #3a2000; margin-top: 1px;
+  }
+  .company.is-new { background: #1a0e00; border-color: #c8a84b; }
+  .company.is-new .name { color: #f0c840; }
+  .company.is-new .ticker { color: #c8a84b; }
+  .new-badge {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 7px; font-weight: 700;
+    background: #c8a84b; color: #1a0e00;
+    padding: 1px 4px; border-radius: 2px;
+    display: block; margin-top: 2px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .footer {
+    margin-top: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .legend { display: flex; gap: 14px; align-items: center; }
+  .legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 9px; font-weight: 700;
+    color: #2a1800; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .legend-dot { width: 14px; height: 10px; border-radius: 2px; }
+  .dot-existing { background: rgba(26,14,0,0.15); border: 1px solid rgba(26,14,0,0.4); }
+  .dot-new { background: #1a0e00; border: 1px solid #c8a84b; }
+  .disclaimer {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 8px; color: #3a2400;
+    text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span>🌐</span>
+  <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  <button class="lang-btn" onclick="setLang('es')">ES</button>
+  <button class="lang-btn" onclick="setLang('zh')">中文</button>
+  <button class="lang-btn" onclick="setLang('ar')">AR</button>
+  <button class="lang-btn" onclick="setLang('tr')">TR</button>
+  <button class="lang-btn" onclick="setLang('pt')">PT</button>
+  <button class="lang-btn" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('ko')">KO</button>
+  <button class="lang-btn" onclick="setLang('hi')">HI</button>
+</div>
+
+<div class="wrapper">
+  <div class="header">
+    <h1 data-t="title"></h1>
+    <p class="sub1" data-t="sub1"></p>
+    <p class="sub2" data-t="sub2"></p>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><div class="num">01</div><div class="title" data-t="cat1"></div></div>
+    <div class="companies">
+      <div class="company"><div class="name">IonQ</div><div class="ticker">$IONQ</div></div>
+      <div class="company"><div class="name">D-Wave</div><div class="ticker">$QBTS</div></div>
+      <div class="company"><div class="name">Rigetti</div><div class="ticker">$RGTI</div></div>
+      <div class="company"><div class="name">QCI</div><div class="ticker">$QUBT</div></div>
+      <div class="company is-new"><div class="name">Xanadu</div><div class="ticker">$XNDU</div><span class="new-badge" data-t="new"></span></div>
+      <div class="company is-new"><div class="name">Infleqtion</div><div class="ticker">$INFQ</div><span class="new-badge" data-t="new"></span></div>
+      <div class="company is-new"><div class="name">Horizon Q.</div><div class="ticker">$HQ</div><span class="new-badge" data-t="new"></span></div>
+      <div class="company is-new"><div class="name">Quantinuum</div><div class="ticker">IPO 2026</div><span class="new-badge" data-t="soon"></span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><div class="num">02</div><div class="title" data-t="cat2"></div></div>
+    <div class="companies">
+      <div class="company"><div class="name">IBM</div><div class="ticker">$IBM</div></div>
+      <div class="company"><div class="name">Google</div><div class="ticker">$GOOGL</div></div>
+      <div class="company"><div class="name">Microsoft</div><div class="ticker">$MSFT</div></div>
+      <div class="company"><div class="name">NVIDIA</div><div class="ticker">$NVDA</div></div>
+      <div class="company"><div class="name">Amazon</div><div class="ticker">$AMZN</div></div>
+      <div class="company"><div class="name">Intel</div><div class="ticker">$INTC</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><div class="num">03</div><div class="title" data-t="cat3"></div></div>
+    <div class="companies">
+      <div class="company"><div class="name">Honeywell</div><div class="ticker">$HON</div></div>
+      <div class="company"><div class="name">Nokia</div><div class="ticker">$NOK</div></div>
+      <div class="company"><div class="name">Fujitsu</div><div class="ticker">$6702</div></div>
+      <div class="company"><div class="name">NEC</div><div class="ticker">$6701</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><div class="num">04</div><div class="title" data-t="cat4"></div></div>
+    <div class="companies">
+      <div class="company"><div class="name">Arqit</div><div class="ticker">$ARQQ</div></div>
+      <div class="company"><div class="name">L3Harris</div><div class="ticker">$LHX</div></div>
+      <div class="company"><div class="name">Teledyne</div><div class="ticker">$TDY</div></div>
+      <div class="company is-new"><div class="name">SEALSQ</div><div class="ticker">$LAES</div><span class="new-badge" data-t="new"></span></div>
+      <div class="company is-new"><div class="name">BTQ Tech.</div><div class="ticker">$BTQ</div><span class="new-badge" data-t="new"></span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label"><div class="num">05</div><div class="title" data-t="cat5"></div></div>
+    <div class="companies">
+      <div class="company"><div class="name">FormFactor</div><div class="ticker">$FORM</div></div>
+      <div class="company"><div class="name">Keysight</div><div class="ticker">$KEYS</div></div>
+      <div class="company"><div class="name">Coherent</div><div class="ticker">$COHR</div></div>
+      <div class="company"><div class="name">Amphenol</div><div class="ticker">$APH</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot dot-existing"></div><span data-t="leg1"></span></div>
+      <div class="legend-item"><div class="legend-dot dot-new"></div><span data-t="leg2"></span></div>
+    </div>
+    <div class="disclaimer" data-t="disclaimer"></div>
+  </div>
+</div>
+
+<script>
+const T = {
+  ru: {
+    title: "Акции квантовых компаний",
+    sub1: "Публичные компании с значительным участием в квантовых технологиях",
+    sub2: "Список компаний, существенно воздействующих на квантовые вычисления — обновлено 2026",
+    cat1: "Чистые квантовые игроки",
+    cat2: "Диверсифицированные техногиганты",
+    cat3: "Промышленное и корпоративное участие",
+    cat4: "Квантовые сети и безопасность",
+    cat5: "Обеспечивающее оборудование и тестирование",
+    new: "NEW 2026",
+    soon: "ОЖИДАЕТСЯ",
+    leg1: "Из оригинала",
+    leg2: "Добавлено 2026",
+    disclaimer: "Не является инвестиционной рекомендацией"
+  },
+  en: {
+    title: "Quantum Computing Stocks",
+    sub1: "Public companies with significant involvement in quantum technologies",
+    sub2: "List of companies substantially impacting quantum computing — updated 2026",
+    cat1: "Pure-play quantum companies",
+    cat2: "Diversified tech giants",
+    cat3: "Industrial & corporate involvement",
+    cat4: "Quantum networks & security",
+    cat5: "Supporting equipment & testing",
+    new: "NEW 2026",
+    soon: "UPCOMING",
+    leg1: "Original list",
+    leg2: "Added 2026",
+    disclaimer: "Not investment advice"
+  },
+  de: {
+    title: "Quantencomputing-Aktien",
+    sub1: "Börsennotierte Unternehmen mit bedeutender Beteiligung an Quantentechnologien",
+    sub2: "Liste von Unternehmen mit wesentlichem Einfluss auf Quantencomputing — aktualisiert 2026",
+    cat1: "Reine Quantenunternehmen",
+    cat2: "Diversifizierte Technologieriesen",
+    cat3: "Industrielle & unternehmerische Beteiligung",
+    cat4: "Quantennetzwerke & Sicherheit",
+    cat5: "Hardware & Testausrüstung",
+    new: "NEU 2026",
+    soon: "BEVORSTEHEND",
+    leg1: "Originalliste",
+    leg2: "Hinzugefügt 2026",
+    disclaimer: "Keine Anlageberatung"
+  },
+  fr: {
+    title: "Actions quantiques",
+    sub1: "Entreprises cotées avec une participation significative dans les technologies quantiques",
+    sub2: "Liste d'entreprises ayant un impact majeur sur l'informatique quantique — mis à jour 2026",
+    cat1: "Entreprises quantiques pures",
+    cat2: "Géants technologiques diversifiés",
+    cat3: "Participation industrielle & d'entreprise",
+    cat4: "Réseaux quantiques & sécurité",
+    cat5: "Équipements & tests de support",
+    new: "NOUVEAU 2026",
+    soon: "À VENIR",
+    leg1: "Liste originale",
+    leg2: "Ajouté en 2026",
+    disclaimer: "Pas un conseil en investissement"
+  },
+  es: {
+    title: "Acciones cuánticas",
+    sub1: "Empresas públicas con participación significativa en tecnologías cuánticas",
+    sub2: "Lista de empresas con impacto sustancial en la computación cuántica — actualizado 2026",
+    cat1: "Empresas cuánticas puras",
+    cat2: "Gigantes tecnológicos diversificados",
+    cat3: "Participación industrial y corporativa",
+    cat4: "Redes cuánticas y seguridad",
+    cat5: "Equipos de soporte y pruebas",
+    new: "NUEVO 2026",
+    soon: "PRÓXIMAMENTE",
+    leg1: "Lista original",
+    leg2: "Añadido en 2026",
+    disclaimer: "No es asesoramiento financiero"
+  },
+  zh: {
+    title: "量子计算股票",
+    sub1: "在量子技术领域具有重要参与度的上市公司",
+    sub2: "对量子计算产生重大影响的公司列表 — 2026年更新",
+    cat1: "纯量子公司",
+    cat2: "多元化科技巨头",
+    cat3: "工业与企业参与",
+    cat4: "量子网络与安全",
+    cat5: "支持设备与测试",
+    new: "新增 2026",
+    soon: "即将上市",
+    leg1: "原始名单",
+    leg2: "2026年新增",
+    disclaimer: "非投资建议"
+  },
+  ar: {
+    title: "أسهم الحوسبة الكمية",
+    sub1: "شركات عامة ذات مشاركة كبيرة في تقنيات الكم",
+    sub2: "قائمة الشركات ذات التأثير الكبير على الحوسبة الكمية — محدّث 2026",
+    cat1: "شركات الكم البحتة",
+    cat2: "عمالقة التكنولوجيا المتنوعة",
+    cat3: "المشاركة الصناعية والمؤسسية",
+    cat4: "شبكات الكم والأمن",
+    cat5: "المعدات الداعمة والاختبار",
+    new: "جديد 2026",
+    soon: "قريباً",
+    leg1: "القائمة الأصلية",
+    leg2: "مضاف 2026",
+    disclaimer: "ليس نصيحة استثمارية"
+  },
+  tr: {
+    title: "Kuantum Bilişim Hisseleri",
+    sub1: "Kuantum teknolojilerinde önemli katılımı olan halka açık şirketler",
+    sub2: "Kuantum bilişimi üzerinde önemli etkisi olan şirketlerin listesi — 2026 güncellemesi",
+    cat1: "Saf kuantum şirketleri",
+    cat2: "Çeşitlendirilmiş teknoloji devleri",
+    cat3: "Endüstriyel ve kurumsal katılım",
+    cat4: "Kuantum ağları ve güvenlik",
+    cat5: "Destek ekipmanları ve test",
+    new: "YENİ 2026",
+    soon: "YAKINDA",
+    leg1: "Orijinal liste",
+    leg2: "2026'da eklendi",
+    disclaimer: "Yatırım tavsiyesi değildir"
+  },
+  pt: {
+    title: "Ações de Computação Quântica",
+    sub1: "Empresas públicas com participação significativa em tecnologias quânticas",
+    sub2: "Lista de empresas com impacto substancial na computação quântica — atualizado 2026",
+    cat1: "Empresas quânticas puras",
+    cat2: "Gigantes tecnológicos diversificados",
+    cat3: "Participação industrial e corporativa",
+    cat4: "Redes quânticas e segurança",
+    cat5: "Equipamentos de suporte e testes",
+    new: "NOVO 2026",
+    soon: "EM BREVE",
+    leg1: "Lista original",
+    leg2: "Adicionado em 2026",
+    disclaimer: "Não é aconselhamento financeiro"
+  },
+  ja: {
+    title: "量子コンピューティング株",
+    sub1: "量子技術への重要な参加を持つ上場企業",
+    sub2: "量子コンピューティングに大きな影響を与える企業リスト — 2026年更新",
+    cat1: "純粋量子企業",
+    cat2: "多角化テクノロジー大手",
+    cat3: "産業・企業参加",
+    cat4: "量子ネットワークとセキュリティ",
+    cat5: "サポート機器とテスト",
+    new: "新規 2026",
+    soon: "近日公開",
+    leg1: "オリジナルリスト",
+    leg2: "2026年追加",
+    disclaimer: "投資アドバイスではありません"
+  },
+  ko: {
+    title: "양자 컴퓨팅 주식",
+    sub1: "양자 기술에 상당한 참여를 하는 상장 기업",
+    sub2: "양자 컴퓨팅에 큰 영향을 미치는 기업 목록 — 2026년 업데이트",
+    cat1: "순수 양자 기업",
+    cat2: "다각화된 기술 대기업",
+    cat3: "산업 및 기업 참여",
+    cat4: "양자 네트워크 및 보안",
+    cat5: "지원 장비 및 테스트",
+    new: "신규 2026",
+    soon: "출시 예정",
+    leg1: "원본 목록",
+    leg2: "2026년 추가",
+    disclaimer: "투자 조언이 아닙니다"
+  },
+  hi: {
+    title: "क्वांटम कंप्यूटिंग स्टॉक्स",
+    sub1: "क्वांटम प्रौद्योगिकियों में महत्वपूर्ण भागीदारी वाली सार्वजनिक कंपनियां",
+    sub2: "क्वांटम कंप्यूटिंग पर महत्वपूर्ण प्रभाव डालने वाली कंपनियों की सूची — 2026 अपडेट",
+    cat1: "शुद्ध क्वांटम कंपनियां",
+    cat2: "विविधीकृत तकनीकी दिग्गज",
+    cat3: "औद्योगिक और कॉर्पोरेट भागीदारी",
+    cat4: "क्वांटम नेटवर्क और सुरक्षा",
+    cat5: "सहायक उपकरण और परीक्षण",
+    new: "नया 2026",
+    soon: "जल्द आएगा",
+    leg1: "मूल सूची",
+    leg2: "2026 में जोड़ा",
+    disclaimer: "यह निवेश सलाह नहीं है"
+  }
+};
+
+function setLang(code) {
+  const t = T[code];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${code}')"]`).classList.add('active');
+  document.documentElement.lang = code;
+  document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+}
+
+setLang('ru');
+</script>
+</body>
+</html>
