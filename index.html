@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Stocks Guide — Multilingual</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050b14;
+    --surface: #0d1a2a;
+    --surface2: #132236;
+    --accent: #00d4ff;
+    --accent2: #7b2fff;
+    --warn: #ff7b2f;
+    --text: #c8dff0;
+    --text-dim: #6a8aaa;
+    --border: rgba(0,212,255,0.12);
+    --glow: 0 0 24px rgba(0,212,255,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-top: 1rem;
+  }
+  .quantum-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--accent) 0%, #fff 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* Language switcher */
+  .lang-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+  .lang-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.45rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn.active {
+    background: rgba(0,212,255,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--glow);
+  }
+  .flag { font-size: 1rem; }
+
+  /* Content sections */
+  .lang-content { display: none; animation: fadeIn 0.4s ease; }
+  .lang-content.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Section card */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+  }
+  .section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .section-body { padding: 1.2rem; }
+
+  /* Table */
+  .tbl-wrap { overflow-x: auto; margin: 0.5rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid rgba(0,212,255,0.06);
+    vertical-align: top;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,212,255,0.04); }
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .bold { font-weight: 700; color: #fff; }
+
+  /* Warning box */
+  .warn-box {
+    margin-top: 0.9rem;
+    background: rgba(255,123,47,0.08);
+    border: 1px solid rgba(255,123,47,0.3);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--warn);
+    line-height: 1.6;
+  }
+  .warn-box + .warn-box { margin-top: 0.5rem; }
+
+  /* Info box */
+  .info-box {
+    margin-top: 0.9rem;
+    background: rgba(123,47,255,0.08);
+    border: 1px solid rgba(123,47,255,0.3);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: #a87fff;
+    line-height: 1.6;
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 2.5rem;
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="quantum-badge">⚛ Quantum Stocks · Binance Web3</div>
+    <h1 id="main-title">Quantum Stocks Guide</h1>
+    <p class="subtitle" id="main-sub">IONQon · RGTIon · Ondo Finance</p>
+  </header>
+
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="switchLang('ru')"><span class="flag">🇷🇺</span> Русский</button>
+    <button class="lang-btn" onclick="switchLang('bg')"><span class="flag">🇧🇬</span> Български</button>
+    <button class="lang-btn" onclick="switchLang('en')"><span class="flag">🇬🇧</span> English</button>
+    <button class="lang-btn" onclick="switchLang('de')"><span class="flag">🇩🇪</span> Deutsch</button>
+    <button class="lang-btn" onclick="switchLang('es')"><span class="flag">🇪🇸</span> Español</button>
+    <button class="lang-btn" onclick="switchLang('zh')"><span class="flag">🇨🇳</span> 中文</button>
+    <button class="lang-btn" onclick="switchLang('tr')"><span class="flag">🇹🇷</span> Türkçe</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ RUSSIAN -->
+  <div id="lang-ru" class="lang-content active">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Токены</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Токен</th><th>Компания</th><th>Технология</th><th>Партнёры</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>Дешевле, выше риск</td></tr>
+        </table></div>
+        <div class="info-box">Оба токена обеспечены реальными акциями NYSE через платформу Ondo Finance.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Как купить</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Подготовь USDC и SOL</td><td>На основном счёте Binance: USDC (сумма покупки) + немного SOL (~$0.50 на газ)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Переведи в Web3 кошелёк</td><td>Binance → Активы → Web3 кошелёк → Перевод. Переводи и USDC и SOL</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Открой Web3 → Торговля → Pro</td><td>Найди IONQon или RGTIon в поиске. Выбери пару USDC → IONQon</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Проверь ликвидность!</td><td>Смотри на объём 24ч и ликвидность перед вводом суммы. Начни с небольшой суммы</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Подтверди свап</td><td>Введи сумму USDC → проверь курс и комиссию → нажми Обменять → подтверди</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Низкий объём = проскальзывание цены. Для суммы &gt;$500 используй лимитный ордер вместо свапа</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Держать в Binance Web3</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Токены в Web3 кошельке</td><td>После покупки IONQon/RGTIon остаются в Binance Web3 кошельке автоматически</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Следи за ценой акции</td><td>Токен следует NYSE: активное движение пн–пт 15:30–22:00 по Болгарии. Ночью цена стоит</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Когда продавать — свап обратно</td><td>Web3 → Торговля → IONQon → USDC → подтверди. Потом USDC на основной счёт Binance</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Web3 кошелёк Binance — твой собственный, не кастодиальный. Только ты контролируешь средства.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Вывод в Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">Полный цикл: Binance Web3 → Phantom (хранение) → Binance Web3 → USDC (продажа)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Скопируй адрес Phantom</td><td>В Phantom / Solflare / Trust Wallet скопируй Solana адрес. Устанавливай только с phantom.app</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Отправь из Binance Web3</td><td>Активы → выбери IONQon → Отправить → вставь адрес Phantom</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Сеть: только Solana!</td><td>Обязательно выбери сеть Solana (не Ethereum) — иначе токены потеряются безвозвратно</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Храни seed phrase офлайн</td><td>12–24 слова кошелька — запиши на бумаге. Никому не показывай, нигде не вводи онлайн</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Когда продавать — верни обратно</td><td>Phantom → Отправить → адрес Binance Web3 → сеть Solana → потом свап в USDC на бирже</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Всегда держи минимум 0.05–0.1 SOL в Phantom — без SOL не сможешь отправить транзакцию обратно!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Торговля на бирже</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — больше ликвидности</td><td>На MEXC листятся IONQON/USDT и RGTION/USDT с апреля 2026. Объём выше чем в Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Торгуй парами USDT</td><td>Стандартный спот-трейдинг: купил дешевле → продал дороже → зафиксировал в USDT</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Следи за NYSE</td><td>Токен следует за ценой акции. Торги: пн–пт 15:30–22:00 по Болгарии. Ночью цена не меняется</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Ставь лимитные ордера</td><td>Не покупай по рынку — низкая ликвидность даст плохую цену. Лимит ордер = ты диктуешь цену</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Квантовый сектор очень волатилен. IONQ: -6% за день и +47% за год. Стоп-лосс обязателен!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">Это информационный материал, не финансовый совет.<br>Инвестиции в квантовый сектор — спекулятивные. Не вкладывайте больше, чем готовы потерять.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ BULGARIAN -->
+  <div id="lang-bg" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Токени</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Токен</th><th>Компания</th><th>Технология</th><th>Партньори</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>По-евтин, по-висок риск</td></tr>
+        </table></div>
+        <div class="info-box">И двата токена са обезпечени с реални акции от NYSE чрез платформата Ondo Finance.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Как да купиш</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Подготви USDC и SOL</td><td>В основния акаунт на Binance: USDC (сума за покупка) + малко SOL (~$0.50 за газ)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Прехвърли в Web3 портфейл</td><td>Binance → Активи → Web3 портфейл → Прехвърляне. Прехвърли и USDC, и SOL</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Отвори Web3 → Търговия → Pro</td><td>Потърси IONQon или RGTIon. Избери двойката USDC → IONQon</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Провери ликвидността!</td><td>Гледай обема за 24ч и ликвидността преди да въведеш сума. Започни с малка сума</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Потвърди суапа</td><td>Въведи сума USDC → провери курса и таксата → натисни Размени → потвърди</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Нисък обем = приплъзване на цената. За суми &gt;$500 използвай лимитна поръчка вместо суап</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Съхранение в Binance Web3</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Токените в Web3 портфейла</td><td>След покупката IONQon/RGTIon остават автоматично в Binance Web3 портфейла</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Следи цената на акцията</td><td>Токенът следва NYSE: активно движение пн–пт 15:30–22:00 ч. (Bulgaria). Нощем цената стои</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">При продажба — суап обратно</td><td>Web3 → Търговия → IONQon → USDC → потвърди. После USDC към основния акаунт Binance</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Web3 портфейлът на Binance е твой, некустодиален. Само ти контролираш средствата.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Изтегляне в Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">Пълен цикъл: Binance Web3 → Phantom (съхранение) → Binance Web3 → USDC (продажба)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Копирай адреса на Phantom</td><td>В Phantom / Solflare / Trust Wallet копирай Solana адреса. Инсталирай само от phantom.app</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Изпрати от Binance Web3</td><td>Активи → избери IONQon → Изпрати → постави адреса на Phantom</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Мрежа: само Solana!</td><td>Задължително избери мрежа Solana (не Ethereum) — иначе токените се губят безвъзвратно</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Пази seed phrase офлайн</td><td>12–24 думи на портфейла — запиши на хартия. Не показвай на никого, не въвеждай онлайн</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">При продажба — върни обратно</td><td>Phantom → Изпрати → адрес Binance Web3 → мрежа Solana → след това суап в USDC на борсата</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Винаги дръж минимум 0.05–0.1 SOL в Phantom — без SOL не можеш да изпратиш транзакция обратно!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Търговия на борсата</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Действие</th><th>Подробности</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — повече ликвидност</td><td>На MEXC са листнати IONQON/USDT и RGTION/USDT от април 2026. Обемът е по-висок от Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Търгувай с USDT двойки</td><td>Стандартен спот трейдинг: купи по-евтино → продай по-скъпо → фиксирай в USDT</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Следи NYSE</td><td>Токенът следва цената на акцията. Търговия: пн–пт 15:30–22:00 ч. Нощем цената не се мени</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Ползвай лимитни поръчки</td><td>Не купувай по пазара — ниска ликвидност = лоша цена. Лимитна поръчка = ти диктуваш цената</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Квантовият сектор е силно волатилен. IONQ: -6% за ден и +47% за година. Стоп-лосът е задължителен!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">Това е информационен материал, не финансов съвет.<br>Инвестициите в квантовия сектор са спекулативни. Не инвестирай повече, отколкото си готов да загубиш.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ ENGLISH -->
+  <div id="lang-en" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Tokens</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Token</th><th>Company</th><th>Technology</th><th>Partners</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>Cheaper, higher risk</td></tr>
+        </table></div>
+        <div class="info-box">Both tokens are backed by real NYSE shares via the Ondo Finance platform.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">How to Buy</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Action</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Prepare USDC and SOL</td><td>In your main Binance account: USDC (purchase amount) + a little SOL (~$0.50 for gas)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Transfer to Web3 Wallet</td><td>Binance → Assets → Web3 Wallet → Transfer. Send both USDC and SOL</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Open Web3 → Trade → Pro</td><td>Search for IONQon or RGTIon. Select the pair USDC → IONQon</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Check liquidity!</td><td>Check 24h volume and liquidity before entering the amount. Start with a small sum</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Confirm the swap</td><td>Enter USDC amount → verify rate and fee → click Exchange → confirm</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Low volume = price slippage. For amounts &gt;$500, use a limit order instead of a swap</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Holding in Binance Web3</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Action</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Tokens in Web3 Wallet</td><td>After purchase, IONQon/RGTIon remain in your Binance Web3 wallet automatically</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Monitor stock price</td><td>Token tracks NYSE: active movement Mon–Fri 15:30–22:00 Bulgaria time. Price is static overnight</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">To sell — swap back</td><td>Web3 → Trade → IONQon → USDC → confirm. Then transfer USDC to main Binance account</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Binance Web3 wallet is non-custodial — you alone control your funds.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Withdraw to Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">Full cycle: Binance Web3 → Phantom (storage) → Binance Web3 → USDC (sell)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Action</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Copy your Phantom address</td><td>In Phantom / Solflare / Trust Wallet, copy your Solana address. Install only from phantom.app</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Send from Binance Web3</td><td>Assets → select IONQon → Send → paste Phantom address</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Network: Solana only!</td><td>Always select Solana network (NOT Ethereum) — otherwise tokens are permanently lost</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Store seed phrase offline</td><td>12–24 wallet words — write on paper. Never share or enter online</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">To sell — send back</td><td>Phantom → Send → Binance Web3 address → Solana network → then swap to USDC on the exchange</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Always keep at least 0.05–0.1 SOL in Phantom — without SOL you cannot send transactions back!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Exchange Trading</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Action</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — more liquidity</td><td>IONQON/USDT and RGTION/USDT listed on MEXC since April 2026. Volume higher than Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Trade USDT pairs</td><td>Standard spot trading: buy low → sell high → lock in USDT</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Watch NYSE</td><td>Token mirrors stock price. Trading: Mon–Fri 15:30–22:00 Bulgaria time. No price change overnight</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Use limit orders</td><td>Don't buy at market — low liquidity = bad price. Limit order = you set the price</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Quantum sector is highly volatile. IONQ: -6% in a day and +47% in a year. Stop-loss is mandatory!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">This is informational content, not financial advice.<br>Quantum sector investments are speculative. Never invest more than you can afford to lose.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ GERMAN -->
+  <div id="lang-de" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Token</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Token</th><th>Unternehmen</th><th>Technologie</th><th>Partner</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>Günstiger, höheres Risiko</td></tr>
+        </table></div>
+        <div class="info-box">Beide Token sind durch echte NYSE-Aktien über die Ondo Finance Plattform gedeckt.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Wie kaufen</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Aktion</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">USDC und SOL vorbereiten</td><td>Im Binance Hauptkonto: USDC (Kaufbetrag) + etwas SOL (~$0.50 für Gas)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">In Web3-Wallet übertragen</td><td>Binance → Assets → Web3-Wallet → Überweisung. Sowohl USDC als auch SOL übertragen</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Web3 → Handel → Pro öffnen</td><td>IONQon oder RGTIon suchen. Handelspaar USDC → IONQon wählen</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Liquidität prüfen!</td><td>24h-Volumen und Liquidität prüfen, bevor du einen Betrag eingibst. Klein anfangen</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Swap bestätigen</td><td>USDC-Betrag eingeben → Kurs und Gebühr prüfen → Tauschen klicken → bestätigen</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Niedriges Volumen = Preisslippage. Bei Beträgen &gt;$500 lieber eine Limitorder statt Swap nutzen</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">In Binance Web3 halten</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Aktion</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Token im Web3-Wallet</td><td>Nach dem Kauf verbleiben IONQon/RGTIon automatisch im Binance Web3-Wallet</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Aktienkurs beobachten</td><td>Token folgt NYSE: aktive Bewegung Mo–Fr 15:30–22:00 (Bulgarien). Nachts bewegt sich der Preis nicht</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Beim Verkauf — zurück-Swap</td><td>Web3 → Handel → IONQon → USDC → bestätigen. Dann USDC auf das Binance-Hauptkonto</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Das Binance Web3-Wallet ist non-custodial — nur du kontrollierst deine Mittel.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Auszahlung in Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">Vollständiger Zyklus: Binance Web3 → Phantom (Aufbewahrung) → Binance Web3 → USDC (Verkauf)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Aktion</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Phantom-Adresse kopieren</td><td>In Phantom / Solflare / Trust Wallet die Solana-Adresse kopieren. Nur von phantom.app installieren</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Aus Binance Web3 senden</td><td>Assets → IONQon auswählen → Senden → Phantom-Adresse einfügen</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Netzwerk: nur Solana!</td><td>Unbedingt Solana-Netzwerk wählen (NICHT Ethereum) — sonst sind Token unwiederbringlich verloren</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Seed-Phrase offline aufbewahren</td><td>12–24 Wallet-Wörter — auf Papier schreiben. Niemandem zeigen, nirgends online eingeben</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Beim Verkauf — zurücksenden</td><td>Phantom → Senden → Binance Web3-Adresse → Solana-Netzwerk → dann Swap zu USDC</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Immer mindestens 0.05–0.1 SOL in Phantom halten — ohne SOL können keine Transaktionen gesendet werden!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Börsenhandel</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Aktion</th><th>Details</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — mehr Liquidität</td><td>IONQON/USDT und RGTION/USDT seit April 2026 auf MEXC gelistet. Volumen höher als im Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">USDT-Paare handeln</td><td>Standard-Spot-Trading: günstig kaufen → teuer verkaufen → in USDT festhalten</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">NYSE beobachten</td><td>Token folgt Aktienkurs. Handel: Mo–Fr 15:30–22:00 Bulgarien. Nachts keine Preisänderung</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Limitorders verwenden</td><td>Nicht zum Marktpreis kaufen — niedrige Liquidität = schlechter Preis. Limit = du bestimmst den Preis</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Quantensektor sehr volatil. IONQ: -6% an einem Tag, +47% in einem Jahr. Stop-Loss ist Pflicht!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">Dies ist informatives Material, keine Finanzberatung.<br>Investitionen im Quantensektor sind spekulativ. Investiere nie mehr, als du dir leisten kannst zu verlieren.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ SPANISH -->
+  <div id="lang-es" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Tokens</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Token</th><th>Empresa</th><th>Tecnología</th><th>Socios</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>Más barato, mayor riesgo</td></tr>
+        </table></div>
+        <div class="info-box">Ambos tokens están respaldados por acciones reales de NYSE a través de la plataforma Ondo Finance.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Cómo Comprar</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Acción</th><th>Detalles</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Prepara USDC y SOL</td><td>En tu cuenta principal de Binance: USDC (monto de compra) + algo de SOL (~$0.50 para gas)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Transfiere a la Wallet Web3</td><td>Binance → Activos → Wallet Web3 → Transferencia. Envía tanto USDC como SOL</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Abre Web3 → Trading → Pro</td><td>Busca IONQon o RGTIon. Selecciona el par USDC → IONQon</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">¡Verifica la liquidez!</td><td>Revisa el volumen 24h y la liquidez antes de ingresar el monto. Empieza con una suma pequeña</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Confirma el swap</td><td>Ingresa el monto USDC → verifica tasa y comisión → clic en Intercambiar → confirma</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Bajo volumen = deslizamiento de precio. Para montos &gt;$500, usa una orden límite en lugar de swap</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Mantener en Binance Web3</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Acción</th><th>Detalles</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Tokens en la wallet Web3</td><td>Tras la compra, IONQon/RGTIon quedan automáticamente en la wallet Binance Web3</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Sigue el precio de la acción</td><td>El token sigue NYSE: movimiento activo lun–vie 15:30–22:00 (Bulgaria). De noche el precio no cambia</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Para vender — swap de regreso</td><td>Web3 → Trading → IONQon → USDC → confirma. Luego transfiere USDC a la cuenta principal Binance</td></tr>
+        </table></div>
+        <div class="info-box">⚠ La wallet Web3 de Binance es non-custodial — solo tú controlas tus fondos.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Retiro a Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">Ciclo completo: Binance Web3 → Phantom (almacenamiento) → Binance Web3 → USDC (venta)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Acción</th><th>Detalles</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Copia tu dirección Phantom</td><td>En Phantom / Solflare / Trust Wallet copia tu dirección Solana. Instala solo desde phantom.app</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Envía desde Binance Web3</td><td>Activos → selecciona IONQon → Enviar → pega la dirección Phantom</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">¡Red: solo Solana!</td><td>Selecciona SIEMPRE la red Solana (NO Ethereum) — de lo contrario los tokens se pierden para siempre</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Guarda seed phrase offline</td><td>12–24 palabras de la wallet — escríbelas en papel. Nunca las compartas ni las ingreses online</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Para vender — devuélvelos</td><td>Phantom → Enviar → dirección Binance Web3 → red Solana → luego swap a USDC en el exchange</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Mantén siempre al menos 0.05–0.1 SOL en Phantom — sin SOL no puedes enviar transacciones de vuelta!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Trading en Exchange</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>Acción</th><th>Detalles</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — más liquidez</td><td>IONQON/USDT y RGTION/USDT listados en MEXC desde abril 2026. Volumen mayor que en Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Opera pares USDT</td><td>Spot trading estándar: compra barato → vende caro → asegura en USDT</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Vigila NYSE</td><td>El token sigue el precio de la acción. Trading: lun–vie 15:30–22:00 Bulgaria. De noche no cambia</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Usa órdenes límite</td><td>No compres a precio de mercado — baja liquidez = mal precio. Orden límite = tú pones el precio</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ El sector cuántico es muy volátil. IONQ: -6% en un día y +47% en un año. ¡Stop-loss obligatorio!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">Este es material informativo, no asesoramiento financiero.<br>Las inversiones en el sector cuántico son especulativas. No inviertas más de lo que puedas permitirte perder.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ CHINESE -->
+  <div id="lang-zh" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">代币</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>代币</th><th>公司</th><th>技术</th><th>合作伙伴</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ（纽交所: IONQ）</td><td>离子阱</td><td>AWS、微软、谷歌</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>超导量子</td><td>价格较低，风险较高</td></tr>
+        </table></div>
+        <div class="info-box">两种代币均通过 Ondo Finance 平台以纽交所真实股票作为背书。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">如何购买</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>操作</th><th>详情</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">准备 USDC 和 SOL</td><td>在 Binance 主账户中准备：USDC（购买金额）+ 少量 SOL（约 $0.50 用于 Gas 费）</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">转入 Web3 钱包</td><td>Binance → 资产 → Web3 钱包 → 转账。同时转入 USDC 和 SOL</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">打开 Web3 → 交易 → Pro</td><td>搜索 IONQon 或 RGTIon，选择 USDC → IONQon 交易对</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">检查流动性！</td><td>输入金额前查看 24h 交易量和流动性。从小额开始</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">确认兑换</td><td>输入 USDC 金额 → 核对汇率和手续费 → 点击兑换 → 确认</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ 低流动性 = 价格滑点。金额超过 $500 时建议使用限价单而非直接兑换</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">在 Binance Web3 中持有</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>操作</th><th>详情</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">代币留在 Web3 钱包</td><td>购买后 IONQon/RGTIon 自动留存于 Binance Web3 钱包中</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">关注股票价格</td><td>代币跟踪纽交所：周一至周五 15:30–22:00（保加利亚时间）活跃波动，夜间价格静止</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">卖出时反向兑换</td><td>Web3 → 交易 → IONQon → USDC → 确认。然后将 USDC 转回 Binance 主账户</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Binance Web3 钱包是非托管的 — 只有你掌控自己的资产。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">提取到 Phantom / Solflare / Trust Wallet</span></div>
+      <div class="section-body">
+        <div class="info-box">完整流程：Binance Web3 → Phantom（存储）→ Binance Web3 → USDC（出售）</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>操作</th><th>详情</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">复制 Phantom 地址</td><td>在 Phantom / Solflare / Trust Wallet 中复制 Solana 地址。仅从 phantom.app 安装</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">从 Binance Web3 发送</td><td>资产 → 选择 IONQon → 发送 → 粘贴 Phantom 地址</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">网络：仅限 Solana！</td><td>必须选择 Solana 网络（非以太坊）— 否则代币将永久丢失</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">离线保存助记词</td><td>12–24 个钱包助记词 — 写在纸上。切勿告知他人或在线输入</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">卖出时退回</td><td>Phantom → 发送 → Binance Web3 地址 → Solana 网络 → 然后在交易所兑换为 USDC</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ 始终在 Phantom 中保留至少 0.05–0.1 SOL — 没有 SOL 将无法发送交易！</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">交易所交易</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>操作</th><th>详情</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — 流动性更高</td><td>IONQON/USDT 和 RGTION/USDT 自2026年4月起在 MEXC 上线。成交量高于 Web3 DEX</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">交易 USDT 对</td><td>标准现货交易：低价买入 → 高价卖出 → 锁定 USDT</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">关注纽交所</td><td>代币跟随股价。交易时间：周一至周五 15:30–22:00（保加利亚）。夜间价格不变</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">使用限价单</td><td>不要以市价买入 — 低流动性 = 差价格。限价单 = 你掌控价格</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ 量子板块波动性极高。IONQ：单日 -6%，年涨 +47%。止损单必不可少！</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">本内容仅供参考，不构成财务建议。<br>量子板块投资属于投机性质。切勿投入超过您承受能力的资金。</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ TURKISH -->
+  <div id="lang-tr" class="lang-content">
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">01</span><span class="section-title">Tokenler</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>Token</th><th>Şirket</th><th>Teknoloji</th><th>Ortaklar</th></tr>
+          <tr><td class="bold">IONQon</td><td>IonQ (NYSE: IONQ)</td><td>Trapped-ion</td><td>AWS, Microsoft, Google</td></tr>
+          <tr><td class="bold">RGTIon</td><td>Rigetti Computing</td><td>Superconducting</td><td>Daha ucuz, daha yüksek risk</td></tr>
+        </table></div>
+        <div class="info-box">Her iki token da Ondo Finance platformu aracılığıyla gerçek NYSE hisseleriyle desteklenmektedir.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">02</span><span class="section-title">Nasıl Satın Alınır</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>İşlem</th><th>Detaylar</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">USDC ve SOL hazırla</td><td>Binance ana hesabında: USDC (satın alma tutarı) + biraz SOL (~$0.50 gas için)</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Web3 Cüzdanına aktar</td><td>Binance → Varlıklar → Web3 Cüzdan → Transfer. Hem USDC hem SOL gönder</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Web3 → İşlem → Pro aç</td><td>IONQon veya RGTIon ara. USDC → IONQon çiftini seç</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Likiditeyi kontrol et!</td><td>Tutar girmeden önce 24s hacmine ve likiditesine bak. Küçük miktarla başla</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Swap'ı onayla</td><td>USDC tutarını gir → kur ve ücretleri kontrol et → Değiştir'e bas → onayla</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Düşük hacim = fiyat kayması. $500 üzeri tutarlar için swap yerine limit emir kullan</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">03</span><span class="section-title">Binance Web3'te Tutmak</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>İşlem</th><th>Detaylar</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Tokenler Web3 Cüzdanında</td><td>Satın alımdan sonra IONQon/RGTIon otomatik olarak Binance Web3 cüzdanında kalır</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Hisse fiyatını takip et</td><td>Token NYSE'yi takip eder: Pzt–Cum 15:30–22:00 (Bulgaristan saati) aktif hareket. Gece fiyat sabit</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Satışta — geri swap</td><td>Web3 → İşlem → IONQon → USDC → onayla. Ardından USDC'yi Binance ana hesabına aktar</td></tr>
+        </table></div>
+        <div class="info-box">⚠ Binance Web3 cüzdanı emanet değildir — fonlarını yalnızca sen kontrol edersin.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">04</span><span class="section-title">Phantom / Solflare / Trust Wallet'a Çekme</span></div>
+      <div class="section-body">
+        <div class="info-box">Tam döngü: Binance Web3 → Phantom (saklama) → Binance Web3 → USDC (satış)</div>
+        <br>
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>İşlem</th><th>Detaylar</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">Phantom adresini kopyala</td><td>Phantom / Solflare / Trust Wallet'ta Solana adresini kopyala. Yalnızca phantom.app'ten yükle</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">Binance Web3'ten gönder</td><td>Varlıklar → IONQon seç → Gönder → Phantom adresini yapıştır</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">Ağ: Yalnızca Solana!</td><td>Mutlaka Solana ağını seç (Ethereum değil) — aksi hâlde tokenler kalıcı olarak kaybolur</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Seed phrase'i çevrimdışı sakla</td><td>Cüzdanın 12–24 kelimesi — kağıda yaz. Kimseye gösterme, internette asla girme</td></tr>
+          <tr><td class="step-num">5</td><td class="bold">Satışta — geri gönder</td><td>Phantom → Gönder → Binance Web3 adresi → Solana ağı → sonra borsada USDC'ye swap</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Phantom'da her zaman en az 0.05–0.1 SOL tut — SOL olmadan geri işlem gönderemezsin!</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><span class="section-num">05</span><span class="section-title">Borsada İşlem</span></div>
+      <div class="section-body">
+        <div class="tbl-wrap"><table>
+          <tr><th>#</th><th>İşlem</th><th>Detaylar</th></tr>
+          <tr><td class="step-num">1</td><td class="bold">MEXC — daha fazla likidite</td><td>IONQON/USDT ve RGTION/USDT Nisan 2026'dan itibaren MEXC'de listelendi. Hacim Web3 DEX'ten yüksek</td></tr>
+          <tr><td class="step-num">2</td><td class="bold">USDT çiftleriyle işlem yap</td><td>Standart spot trading: ucuza al → pahalıya sat → USDT'de kilitle</td></tr>
+          <tr><td class="step-num">3</td><td class="bold">NYSE'yi takip et</td><td>Token hisse fiyatını takip eder. İşlem saatleri: Pzt–Cum 15:30–22:00 Bulgaristan. Gece değişmez</td></tr>
+          <tr><td class="step-num">4</td><td class="bold">Limit emirler kullan</td><td>Piyasa fiyatından alma — düşük likidite = kötü fiyat. Limit emir = fiyatı sen belirlersin</td></tr>
+        </table></div>
+        <div class="warn-box">⚠ Kuantum sektörü çok volatil. IONQ: günde -6% ve yılda +47%. Stop-loss zorunlu!</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">Bu içerik bilgilendirme amaçlıdır, finansal tavsiye değildir.<br>Kuantum sektörü yatırımları spekülatiftir. Kaybetmeye hazır olduğunuzdan fazlasını yatırmayın.</div>
+  </div>
+
+</div>
+
+<script>
+  function switchLang(lang) {
+    document.querySelectorAll('.lang-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.lang-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>
+</body>
+</html>
